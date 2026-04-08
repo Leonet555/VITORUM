@@ -40,10 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# pasta duplicada acidental (não versionar)
+/vitorum/
+
 # sqlite e uploads locais
 /data
 /public/uploads/*
 !/public/uploads/.gitkeep
-
-# cópia aninhada acidental (não versionar)
-/vitorum/
