@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { getSessionUserId } from "@/lib/session";
 import { getUserById } from "@/lib/queries";
 import { redirect } from "next/navigation";
 import { formatCPFDisplay } from "@/lib/cpf";
-import { Mail, Phone, Scale, Cake, Building2, User, IdCard, Award } from "lucide-react";
+import { Mail, Phone, Scale, Cake, Building2, User, IdCard, Award, Pencil } from "lucide-react";
 
 export default async function PerfilPage() {
   const id = await getSessionUserId();
@@ -24,10 +25,19 @@ export default async function PerfilPage() {
 
   return (
     <div className="space-y-10">
-      <header>
-        <p className="text-sm font-medium uppercase tracking-widest text-teal-600 dark:text-teal-400">Conta</p>
-        <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Perfil</h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">Dados informados no cadastro.</p>
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-sm font-medium uppercase tracking-widest text-teal-600 dark:text-teal-400">Conta</p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Perfil</h1>
+          <p className="mt-2 text-slate-600 dark:text-slate-400">Dados informados no cadastro.</p>
+        </div>
+        <Link
+          href="/dashboard/perfil/editar"
+          className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-teal-500"
+        >
+          <Pencil className="h-4 w-4" aria-hidden />
+          Editar perfil
+        </Link>
       </header>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-zinc-900/80">

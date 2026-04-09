@@ -1,4 +1,4 @@
-import { getDb, type CreationRow, type UserRow } from "@/lib/db";
+import { getDb, type CreationRow, type HomeCustomRow, type UserRow } from "@/lib/db";
 
 export async function getUserByEmail(email: string): Promise<UserRow | null> {
   const db = await getDb();
@@ -35,6 +35,19 @@ export async function getCreation(userId: number, slot: number): Promise<Creatio
     return null;
   }
   const row = stmt.getAsObject() as unknown as CreationRow;
+  stmt.free();
+  return row;
+}
+
+export async function getUserHomeCustom(userId: number): Promise<HomeCustomRow | null> {
+  const db = await getDb();
+  const stmt = db.prepare(`SELECT * FROM user_home_custom WHERE user_id = ?`);
+  stmt.bind([userId]);
+  if (!stmt.step()) {
+    stmt.free();
+    return null;
+  }
+  const row = stmt.getAsObject() as unknown as HomeCustomRow;
   stmt.free();
   return row;
 }

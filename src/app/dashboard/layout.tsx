@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSessionUserId } from "@/lib/session";
-import { DashboardSidebar } from "@/components/dashboard-sidebar";
+import { getUserById } from "@/lib/queries";
+import { DashboardShell } from "@/components/dashboard-shell";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const userId = await getSessionUserId();
@@ -8,14 +9,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/cadastro");
   }
 
+  const user = await getUserById(userId);
+  if (!user) {
+    redirect("/cadastro");
+  }
+
   return (
-    <div className="flex min-h-screen bg-slate-100 dark:bg-zinc-950">
-      <DashboardSidebar />
-      <div className="flex min-h-screen flex-1 flex-col">
-        <main className="flex-1 overflow-auto">
-          <div className="mx-auto max-w-5xl px-6 py-10 lg:px-10">{children}</div>
-        </main>
-      </div>
-    </div>
+    <DashboardShell displayName={user.full_name} avatarUrl={user.profile_image_path}>
+      {children}
+    </DashboardShell>
   );
 }

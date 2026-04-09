@@ -2,7 +2,7 @@ import initSqlJs from "sql.js";
 import type { Database } from "sql.js";
 import fs from "fs";
 import path from "path";
-import { migrateUsersColumns } from "@/lib/db-migrate";
+import { migrateHomeHeroExtraSlots, migrateUsersColumns } from "@/lib/db-migrate";
 
 const dbPath = path.join(process.cwd(), "data", "vitorum.db");
 
@@ -46,7 +46,19 @@ function migrate(db: Database) {
       FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
     );
   `);
+  db.run(`
+    CREATE TABLE IF NOT EXISTS user_home_custom (
+      user_id INTEGER PRIMARY KEY,
+      hero_title TEXT NOT NULL DEFAULT '',
+      hero_subtitle TEXT NOT NULL DEFAULT '',
+      hero_image_path TEXT,
+      blocks_json TEXT NOT NULL DEFAULT '[]',
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+  `);
   migrateUsersColumns(db);
+  migrateHomeHeroExtraSlots(db);
 }
 
 export function persistDb(db: Database) {
@@ -108,5 +120,24 @@ export type CreationRow = {
   image_path: string | null;
   link_url: string | null;
   event_date: string | null;
+  updated_at: string;
+};
+
+export type HomeCustomRow = {
+  user_id: number;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_event_date?: string | null;
+  /** JSON ["","","",""] — legenda por slot */
+  slot_subtitles_json?: string | null;
+  /** JSON ["","","",""] — URL ao tocar na foto */
+  slot_links_json?: string | null;
+  /** JSON string[] — mais imagens (galeria) */
+  extra_images_json?: string | null;
+  hero_image_path: string | null;
+  hero_image_path_2?: string | null;
+  hero_image_path_3?: string | null;
+  hero_image_path_4?: string | null;
+  blocks_json: string;
   updated_at: string;
 };
